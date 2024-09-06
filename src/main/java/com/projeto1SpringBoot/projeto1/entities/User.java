@@ -1,18 +1,34 @@
 package com.projeto1SpringBoot.projeto1.entities;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "tb_user")
 public class User implements Serializable {
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String email;
     private String phone;
     private String password;
 
+    //Associação entre as classes(Um usuário pode ter vários pedidos)
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
+
     public User() {}
 
-    public User(Integer id, String name, String email, String phone, String password) {
+    public User(Long id, String name, String email, String phone, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -20,11 +36,15 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Integer getId() {
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -73,4 +93,5 @@ public class User implements Serializable {
     public int hashCode() {
         return Objects.hashCode(getId());
     }
+
 }
